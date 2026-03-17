@@ -18,6 +18,7 @@ end
 
 group :production do
   gem "pg"
+  gem "image_processing", "~> 1.2"
 end
 
 group :development do
