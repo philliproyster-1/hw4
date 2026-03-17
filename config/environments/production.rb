@@ -70,5 +70,5 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Read secret_key_base from environment variable so credentials decryption is not required
-  config.secret_key_base = ENV["SECRET_KEY_BASE"]
+  config.secret_key_base = ENV["SECRET_KEY_BASE"] || SecureRandom.hex(64)
 end
