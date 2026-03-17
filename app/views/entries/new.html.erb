@@ -1,22 +1,29 @@
-<h1>New Entry</h1>
+<h1>New Entry for <%= @place["name"] %></h1>
 
-<form action="/entries" method="post">
-  <input type="hidden" name="place_id" value="<%= params["place_id"] %>">
+<form action="/entries" method="post" enctype="multipart/form-data">
+  <% # Hidden field to keep track of which place we are adding an entry to %>
+  <input type="hidden" name="entry[place_id]" value="<%= @place["id"] %>">
 
-  <p>
-    <label for="title_input">Title</label>
-    <input type="text" name="title" id="title_input">
-  </p>
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input type="text" name="entry[title]" id="title" class="form-control">
+  </div>
 
-  <p>
-    <label for="description_input">Description</label>
-    <input type="text" name="description" id="description_input">
-  </p>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea name="entry[description]" id="description" class="form-control"></textarea>
+  </div>
 
-  <p>
-    <label for="occurred_on_input">Occurred On</label>
-    <input type="date" name="occurred_on" id="occurred_on_input">
-  </p>
+  <div class="mb-3">
+    <label for="date" class="form-label">Date</label>
+    <input type="date" name="entry[occurred_on]" id="date" class="form-control">
+  </div>
 
-  <button>Save</button>
+  <div class="mb-3">
+    <label for="image" class="form-label">Upload Photo</label>
+    <% # This name 'uploaded_image' must match what's in your controller! %>
+    <input type="file" name="uploaded_image" id="image" class="form-control" accept="image/*">
+  </div>
+
+  <button class="btn btn-primary">Save Entry</button>
 </form>

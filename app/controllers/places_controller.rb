@@ -1,4 +1,5 @@
 class PlacesController < ApplicationController
+  before_action :require_login
 
   def index
     @places = Place.all
@@ -6,15 +7,22 @@ class PlacesController < ApplicationController
 
   def show
     @place = Place.find_by({ "id" => params["id"] })
-    @entries = Entry.where({ "place_id" => @place["id"] })
+    
+    # This filter ensures you only see YOUR entries
+    if current_user
+      @entries = Entry.where({ "place_id" => @place["id"], "user_id" => current_user["id"] })
+    else
+      @entries = []
+    end
   end
 
   def new
+    @place = Place.new
   end
 
   def create
     @place = Place.new
-    @place["name"] = params["name"]
+    @place["name"] = params["place"]["name"]
     @place.save
     redirect_to "/places"
   end

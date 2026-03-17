@@ -1,16 +1,44 @@
-<h1><%= @place["name"] %></h1>
+<div class="container mt-4">
+  <% if @place %>
+    <h1><%= @place["name"] %></h1>
 
-<h2>My Entries</h2>
-<% for entry in @entries %>
-  <h3><%= entry["title"] %></h3>
-  <h4><%= entry["occurred_on"] %></h4>
-  <p><%= entry["description"] %></p>
-<% end %>
+    <h3 class="mt-4">My Entries</h3>
+    <hr>
 
-<p>
-  <a href="/entries/new?place_id=<%= @place["id"] %>">New Entry</a>
-</p>
+    <% if @entries.any? %>
+      <div class="row row-cols-1 row-cols-md-3 g-4 mt-2">
+        <% for entry in @entries %>
+          <div class="col">
+            <div class="card h-100 shadow-sm">
+              <% if entry.uploaded_image.attached? %>
+                <img src="<%= url_for(entry.uploaded_image) %>" class="card-img-top" style="max-height: 200px; object-fit: cover;">
+              <% end %>
+              <div class="card-body">
+                <h5 class="card-title"><%= entry["title"] %></h5>
+                <p class="text-muted small"><%= entry["occurred_on"] %></p>
+                <p class="card-text"><%= entry["description"] %></p>
+              </div>
+              <div class="card-footer bg-transparent border-0">
+                <form action="/entries/<%= entry["id"] %>" method="post">
+                  <input type="hidden" name="_method" value="delete">
+                  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-muted">You haven't added any entries for this place yet.</p>
+    <% end %>
 
-<p>
-  <a href="/places">Back to All Places</a>
-</p>
+    <div class="mt-4 mb-5">
+      <a href="/entries/new?place_id=<%= @place["id"] %>" class="btn btn-success">Add New Entry</a>
+      <a href="/places" class="btn btn-outline-primary">Back to All Places</a>
+    </div>
+  <% else %>
+    <p>Place not found.</p>
+    <a href="/places" class="btn btn-primary">Back to All Places</a>
+  <% end %>
+</div>
